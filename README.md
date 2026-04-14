@@ -653,10 +653,6 @@ This is how the model learns to say:
 ---
 
 ![4](4.png)
-Let's break down **exactly what's happening in this image** — **step by step**, **no assumptions**, **no fluff** — based *only* on what's visually presented.
-
----
-
 ### 🖼️ **What This Image Shows: The Core Computation of Self-Attention**
 
 This is **not** an analogy — this is the **actual mathematical operation** inside the Transformer.  
@@ -724,9 +720,6 @@ softmax(Raw Scores / √512) = (4×4) attention weights
 ---
 
 ![5](5.png)
-Let's break down **exactly what's happening in this image** — **step by step**, **no assumptions**, **no fluff** — based *only* on what's visually presented.
-
----
 
 ### 🖼️ **What This Image Shows: The Core Computation of Self-Attention**
 
