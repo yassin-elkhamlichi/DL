@@ -239,6 +239,7 @@ This is a **Matrix-Vector Multiplication**, which is essentially **3 separate do
 **3. The Result**
 
 The output of the $W_{ax}$ part is a new vector:
+
 $$
 \begin{bmatrix}
 1.4 \\
@@ -261,6 +262,7 @@ $b_a$ is a learnable parameter, exactly like the weight matrices $W_{ax}$ and $W
 $b$ is also a matrix.
 
 So the result is a matrix like this:
+
 $$
 a^{\langle 1 \rangle} = \begin{bmatrix}
 0.885 \\
@@ -273,7 +275,10 @@ $$
 
 - **$W_{ya}$ (Learned Weights):** (Size $1 \times 3$)
 
-$$W_{ya} = \begin{bmatrix} 0.5 & -0.1 & 0.8 \end{bmatrix}$$
+$$
+W_{ya} = \begin{bmatrix} 0.5 & -0.1 & 0.8 \end{bmatrix}
+$$
+
 - **$b_y$ (Bias):** $[0.1]$
 
 This is the final step of the RNN process—taking the "memory" you just created and turning it into an actual **prediction**.
