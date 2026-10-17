@@ -98,7 +98,7 @@ The engineer doesn't write the dictionary. Instead, the engineer chooses a **Tok
 
 ### 3. Converting to Vectors: The "Learning" Phase
 
-You asked: *"Use the real dictionary and convert it to vectors?"*  
+The Question: *"Can we use the real dictionary and convert it to vectors?"*  
 The answer is: **We don't convert them; we let the model "invent" them.**
 
 1. **Initial State:** Every word in that 30,000-word list is assigned a **random vector** (768 random numbers). At this stage, the word "king" and "apple" look exactly the same to the AI—just random noise.
@@ -131,7 +131,7 @@ If you could "open up" the vector for the word **"king"**, each of those 768 num
 
 #### 2. Human vs. AI Understanding
 
-There is a big catch you should mention in your presentation: **We cannot usually name these dimensions.**
+**We cannot usually name these dimensions.**
 
 - **Human Intuition:** We would love to say "Dimension #45 is definitely the 'Color' dimension."
 - **AI Reality:** The model finds its own 768 patterns that work best for math. Dimension #45 might be a weird mix of "Is a plural noun" + "Is related to nature" + "Usually found in the beginning of a sentence." This is called **Distributed Representation**.
@@ -144,8 +144,6 @@ Why not just 3 numbers? Because human language is too complex.
 - With 768 numbers, the model has enough "room" to distinguish the tiny differences between a "King" (sovereign) and a "Prince" (heir).
 
 > so feature like parameter? :
-
-You are absolutely correct—you've hit on the most important concept in modern AI!
 
 Yes, every one of those 768 numbers is a **parameter**. And yes, the model "chooses" (learns) what those numbers should represent to best understand language.
 
@@ -171,9 +169,8 @@ The model "chooses" the best features through **optimization**.
 
 #### 3. "Yassine" in the Vector vs. the Word
 
-You asked: *"In the vector, we find a column for gender, but for the word, we don't find a gender column?"*
+The Question : *"In the vector, we find a column for gender, but for the word, we don't find a gender column?"*
 
-Exactly!
 
 - **The Text Word:** "Yassine" is just 7 letters. It contains no metadata.
 - **The Vector (Embedding):** This is where the "hidden meaning" lives. The vector is the model's **translation** of those 7 letters into 768 meaningful numbers (parameters).
@@ -201,14 +198,14 @@ Think of the weights as the model's **knowledge of the English language**.
 
 ### 3. The Math for the First Word
 
-Let's look at your equation for the first step:
+Let's look at our equation for the first step:
 
 - **The $W_{aa} a^{\langle 0 \rangle}$ part:** Because it multiplies by the zeros of $a^{\langle 0 \rangle}$, this part becomes zero **for this step only**. The "memory" contribution is empty.
 - **The $W_{ax} x^{\langle 1 \rangle}$ part:** This is where the magic happens! $W_{ax}$ (which is NOT zero) multiplies the vector for "Yassine" ($x^{\langle 1 \rangle}$). This allows the model to capture the meaning of the first word and store it in the new hidden state $a^{\langle 1 \rangle}$.
 
 #### Example:
 
-Let's look at the "Yassine" calculation with real numbers. To keep the math simple for your presentation, we will use an embedding size of **3** and a hidden size of **3** (instead of 768).
+Let's look at the "Yassine" calculation with real numbers. To keep the math simple, we will use an embedding size of **3** and a hidden size of **3** (instead of 768).
 
 **1. The Inputs**
 
@@ -283,11 +280,11 @@ $$
 
 This is the final step of the RNN process—taking the "memory" you just created and turning it into an actual **prediction**.
 
-In your diagrams, the notation in the weight matrix stands for **"from $y$ to $a$"**. This matrix is the "bridge" between the hidden layer and the final output layer.
+In the screen above, the notation in the weight matrix stands for **"from $y$ to $a$"**. This matrix is the "bridge" between the hidden layer and the final output layer.
 
 #### 1. The Output Equation
 
-According to your slide, the output $\hat{y}$ is calculated as:
+According to the screen, the output $\hat{y}$ is calculated as:
 
 - **$a^{\langle 1 \rangle}$:** This is the hidden state (the "memory") you just calculated.
 - **$W_{ya}$:** This is a learned weight matrix that translates that memory into something the outside world understands (like a word prediction).
