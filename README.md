@@ -1,5 +1,39 @@
 # Deep Learning: From Tokens to Transformers
 
+---
+
+## 📑 Table of Contents
+
+1. [The Two-Step Process: Tokenization and Embedding](#the-two-step-process-tokenization-and-embedding)
+   - [Tokenizer Algorithm Examples](#tokenizer-algorithm-examples)
+   - [Modern Industry Standards (2026)](#modern-industry-standards-2026)
+2. [Dictionary Creation](#dictionary-creation)
+   - [Who Creates the Dictionary?](#1-who-creates-the-dictionary-the-engineer--the-algorithm)
+   - [Is It a "Real" Dictionary?](#2-is-it-a-real-dictionary)
+   - [Converting to Vectors](#3-converting-to-vectors-the-learning-phase)
+3. [Understanding Embedding Vectors](#understanding-embedding-vectors)
+   - [What Each Number in the Vector Means](#what-each-number-in-the-vector-means-768-dimensions)
+4. [RNN: Structure and Calculations](#rnn-structure-and-calculations)
+   - [The Initial Hidden State](#1-the-initial-hidden-state)
+   - [The Weights](#2-the-weights)
+   - [The Math for the First Word](#3-the-math-for-the-first-word)
+   - [Calculating the Output y](#calculating-the-output-y)
+5. [RNN Limitations](#rnn-limitations)
+6. [Transformers](#transformers)
+   - [Multi-Head Attention Explained](#-multi-head-attention-explained--precisely-based-on-your-image)
+   - [Q/K/V Intuition](#-how-it-works)
+   - [Self-Attention Step-by-Step](#-step-by-step-breakdown-follow-the-data-flow)
+7. [Feed Forward Network](#-what-is-the-feed-forward-network)
+   - [Mathematical Formulation](#-mathematical-formulation)
+   - [Why Does the FFN Exist?](#-why-does-the-ffn-exist-the-big-picture)
+8. [Masked Attention](#-masked-attention-explained--precisely-based-on-your-image)
+9. [Transformer Training](#-transformer-training-explained--precisely-based-on-your-image)
+10. [Transformer Testing (Inference)](#-transformer-testing-inference-explained--precisely-based-on-your-image)
+11. [Subword Tokenization](#q-if-we-chop-hugging-into-pieces-like-hugg-and-ing-how-does-the-model-not-lose-the-soul-of-the-word)
+12. [BERT](#bert-)
+
+---
+
 ## The Two-Step Process: Tokenization and Embedding
 
 To get words into matrices for neural networks, we use a two-step process: **Tokenization** and **Embedding**.
@@ -152,7 +186,7 @@ Exactly!
 
 → How do the calculations happen?
 
-### 1. The Initial Hidden State ($a^{<0>} = \vec{0}$)
+### 1. The Initial Hidden State ($a^{\langle 0 \rangle} = \vec{0}$)
 
 Is typically a vector of zeros.
 
@@ -169,8 +203,8 @@ Think of the weights as the model's **knowledge of the English language**.
 
 Let's look at your equation for the first step:
 
-- **The $W_{aa} a^{<0>}$ part:** Because it multiplies by the zeros of $a^{<0>}$, this part becomes zero **for this step only**. The "memory" contribution is empty.
-- **The $W_{ax} x^{<1>}$ part:** This is where the magic happens! $W_{ax}$ (which is NOT zero) multiplies the vector for "Yassine" ($x^{<1>}$). This allows the model to capture the meaning of the first word and store it in the new hidden state $a^{<1>}$.
+- **The $W_{aa} a^{\langle 0 \rangle}$ part:** Because it multiplies by the zeros of $a^{\langle 0 \rangle}$, this part becomes zero **for this step only**. The "memory" contribution is empty.
+- **The $W_{ax} x^{\langle 1 \rangle}$ part:** This is where the magic happens! $W_{ax}$ (which is NOT zero) multiplies the vector for "Yassine" ($x^{\langle 1 \rangle}$). This allows the model to capture the meaning of the first word and store it in the new hidden state $a^{\langle 1 \rangle}$.
 
 #### Example:
 
@@ -178,7 +212,7 @@ Let's look at the "Yassine" calculation with real numbers. To keep the math simp
 
 **1. The Inputs**
 
-- **$x^{<1>}$ (Embedding for "Yassine"):** $[1, 2, 3]^T$
+- **$x^{\langle 1 \rangle}$ (Embedding for "Yassine"):** $[1, 2, 3]^T$
 - **$W_{ax}$ (Learned Weights):**
   $$
   \begin{bmatrix}
@@ -188,7 +222,7 @@ Let's look at the "Yassine" calculation with real numbers. To keep the math simp
   \end{bmatrix}
   $$
 
-**2. The Step-by-Step Multiplication ($W_{ax} \cdot x^{<1>}$)**
+**2. The Step-by-Step Multiplication ($W_{ax} \cdot x^{\langle 1 \rangle}$)**
 
 This is a **Matrix-Vector Multiplication**, which is essentially **3 separate dot products**.
 
@@ -216,9 +250,9 @@ $$
 
 According to the RNN equation:
 
-1. **Addition:** This result $[1.4, 3.2, 5.0]$ is added to the memory part ($W_{aa} a^{<0>}$) and the bias ($b_a$).
+1. **Addition:** This result $[1.4, 3.2, 5.0]$ is added to the memory part ($W_{aa} a^{\langle 0 \rangle}$) and the bias ($b_a$).
 2. **Activation:** The sum goes into $g$ (tanh) to squash the numbers between -1 and 1.
-3. **Final State:** The result is $a^{<1>}$—the model's first "memory" of "Yassine".
+3. **Final State:** The result is $a^{\langle 1 \rangle}$—the model's first "memory" of "Yassine".
 
 → How do we choose $b$?
 
@@ -227,7 +261,7 @@ $b$ is also a matrix.
 
 So the result is a matrix like this:
 $$
-a^{<1>} = \begin{bmatrix}
+a^{\langle 1 \rangle} = \begin{bmatrix}
 0.885 \\
 0.997 \\
 1.000
@@ -236,7 +270,9 @@ $$
 
 ### Calculating the Output $y$
 
-- **$W_{ya}$ (Learned Weights):** $\begin{bmatrix} 0.5 & -0.1 & 0.8 \end{bmatrix}$ (Size $1 \times 3$)
+- **$W_{ya}$ (Learned Weights):** (Size $1 \times 3$)
+
+$$W_{ya} = \begin{bmatrix} 0.5 & -0.1 & 0.8 \end{bmatrix}$$
 - **$b_y$ (Bias):** $[0.1]$
 
 This is the final step of the RNN process—taking the "memory" you just created and turning it into an actual **prediction**.
@@ -247,25 +283,25 @@ In your diagrams, the notation in the weight matrix stands for **"from $y$ to $a
 
 According to your slide, the output $\hat{y}$ is calculated as:
 
-- **$a^{<1>}$:** This is the hidden state (the "memory") you just calculated.
+- **$a^{\langle 1 \rangle}$:** This is the hidden state (the "memory") you just calculated.
 - **$W_{ya}$:** This is a learned weight matrix that translates that memory into something the outside world understands (like a word prediction).
 - **$g$:** This is the second activation function, usually a **Softmax** if we are trying to choose a word from a dictionary.
 
 #### 2. Practical Example Using Our "Yassine" Results
 
-Let's use the $a^{<1>}$ vector we just calculated: $[0.885, 0.997, 1.000]^T$.
+Let's use the $a^{\langle 1 \rangle}$ vector we just calculated: $[0.885, 0.997, 1.000]^T$.
 
 Imagine our model is trying to predict if the sentence is "Positive" or "Negative." Our output $\hat{y}$ only needs to be **one number** (Probability).
 
 **The Setup:**
 
-- **Input $a^{<1>}$:** $[0.885, 0.997, 1.000]^T$
+- **Input $a^{\langle 1 \rangle}$:** $[0.885, 0.997, 1.000]^T$
 - **$W_{ya}$ (Learned Weights):** $[0.5, -0.1, 0.8]$ (Size $1 \times 3$)
 - **$b_y$ (Bias):** $[0.1]$
 
 **The Math Step-by-Step:**
 
-1. **The Dot Product ($W_{ya} \cdot a^{<1>}$):**  
+1. **The Dot Product ($W_{ya} \cdot a^{\langle 1 \rangle}$):**  
    $(0.5 \times 0.885) + (-0.1 \times 0.997) + (0.8 \times 1.000)$  
    $= 0.4425 - 0.0997 + 0.8 = \mathbf{1.1428}$
 
@@ -446,7 +482,9 @@ Example:
 
 The model simply **adds** the word embedding + positional embedding element-wise:
 
-Encoder Input = Word Embedding + Positional Embedding
+$$
+\text{Encoder Input} = \text{Word Embedding} + \text{Positional Embedding}
+$$
 
 
 This gives us the final input to the Transformer encoder — still 512D per token, but now with **both semantic meaning AND position info**.
@@ -468,8 +506,13 @@ They use this formula from the original paper "Attention Is All You Need":
 For position `pos` and dimension `i`:
 
 
-PE(pos, 2i)   = sin(pos / 10000^(2i/d_model))
-PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model))
+$$
+PE_{(pos, 2i)} = \sin\left(\frac{pos}{10000^{2i/d_{model}}}\right)
+$$
+
+$$
+PE_{(pos, 2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{model}}}\right)
+$$
 
 
 Where:
@@ -851,15 +894,15 @@ It's a **simple 2-layer MLP (Multi-Layer Perceptron)** applied **independently t
 
 From the original Transformer paper ("Attention Is All You Need"):
 
-```
-FFN(x) = max(0, x·W₁ + b₁)·W₂ + b₂
-```
+$$
+\text{FFN}(x) = \max(0, \; x \cdot W_1 + b_1) \cdot W_2 + b_2
+$$
 
 Or with GELU (used in BERT/GPT):
 
-```
-FFN(x) = GELU(x·W₁ + b₁)·W₂ + b₂
-```
+$$
+\text{FFN}(x) = \text{GELU}(x \cdot W_1 + b_1) \cdot W_2 + b_2
+$$
 
 Where:
 - `x` = input vector for **one token** (size: `d_model = 512`)
@@ -972,9 +1015,9 @@ This is where **masking happens** — specifically **causal masking** (for autor
 
 After masking, apply `softmax` to the matrix:
 
-```
-softmax(scores) = e^scores / sum(e^scores)
-```
+$$
+\text{softmax}(scores) = \frac{e^{scores}}{\sum e^{scores}}
+$$
 
 - **Result**: All `-∞` positions become **0** (since `e^(-∞) = 0`)
 - **Only valid attention weights remain** (for past tokens)
@@ -1287,10 +1330,3 @@ The attention mechanism calculates the relationship between every token in a sen
 
 
 > **Bottom Line:** Even if a split looks "ugly" (like `hu` + `gg` + `ing`), BERT is **Bidirectional**. The `hu` piece is literally "informed" by the `gg` and `ing` pieces. It doesn't have to guess; the full context is always visible to every piece.
-
-
----
-## BERT : 
-
-
-
