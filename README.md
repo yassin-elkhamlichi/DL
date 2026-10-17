@@ -214,13 +214,14 @@ Let's look at the "Yassine" calculation with real numbers. To keep the math simp
 
 - **$x^{\langle 1 \rangle}$ (Embedding for "Yassine"):** $[1, 2, 3]^T$
 - **$W_{ax}$ (Learned Weights):**
-  $$
-  \begin{bmatrix}
-  0.1 & 0.2 & 0.3 \\
-  0.4 & 0.5 & 0.6 \\
-  0.7 & 0.8 & 0.9
-  \end{bmatrix}
-  $$
+
+$$
+W_{ax} = \begin{bmatrix}
+0.1 & 0.2 & 0.3 \\
+0.4 & 0.5 & 0.6 \\
+0.7 & 0.8 & 0.9
+\end{bmatrix}
+$$
 
 **2. The Step-by-Step Multiplication ($W_{ax} \cdot x^{\langle 1 \rangle}$)**
 
