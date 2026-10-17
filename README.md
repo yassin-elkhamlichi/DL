@@ -30,7 +30,6 @@
 9. [Transformer Training](#-transformer-training-explained--precisely-based-on-your-image)
 10. [Transformer Testing (Inference)](#-transformer-testing-inference-explained--precisely-based-on-your-image)
 11. [Subword Tokenization](#q-if-we-chop-hugging-into-pieces-like-hugg-and-ing-how-does-the-model-not-lose-the-soul-of-the-word)
-12. [BERT](#bert-)
 
 ---
 
